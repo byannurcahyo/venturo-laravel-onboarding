@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('m_user', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('m_user_roles_id')
+                    ->comment('Fill with id from table m_user_roles');
             $table->string('name', 100)
                     ->comment('Fill with name of user');
             $table->string('email', 50)

@@ -13,14 +13,13 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = \Faker\Factory::create();
         DB::table('m_user_roles')->insert([
-            'id' => $faker->uuid,
+            'id' => '8d73e100-e164-417b-8420-25ed2f4092c3',
             'name' => 'Admin',
             'access' => '["admin"]'
         ]);
         DB::table('m_user_roles')->insert([
-            'id' => $faker->uuid,
+            'id' => 'dc492e77-742f-4c58-9479-f270887ffe5c',
             'name' => 'Staff',
             'access' => '["staff"]'
         ]);

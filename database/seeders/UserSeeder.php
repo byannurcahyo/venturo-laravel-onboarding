@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         $faker = \Faker\Factory::create();
         DB::table('m_user')->insert([
             'id' => $faker->uuid,
+            'm_user_roles_id' => '8d73e100-e164-417b-8420-25ed2f4092c3',
             'name' => 'Admin',
             'email' => 'admin@landa.co.id',
             'password' => Hash::make('devGanteng'),
