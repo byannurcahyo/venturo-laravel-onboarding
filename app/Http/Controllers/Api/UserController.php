@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Helpers\User\UserHelper;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\User\UserResource;
 
 class UserController extends Controller
 {
@@ -25,10 +24,11 @@ class UserController extends Controller
             'name' => $request->name ?? '',
             'email' => $request->email ?? '',
         ];
-        $users = $this->user->getAll($filter, $request->page ?? 25 ,$request->sort ?? '');
+        $users = $this->user->getAll($filter, 5, $request->sort ?? '');
+
         return response()->json([
             'success' => true,
-            'list' => UserResource::collection($users['data']),
+            'data' => $users['data']
         ]);
     }
 
@@ -62,7 +62,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new UserResource($user['data'])
+            'message' => 'User created successfully'
         ]);
     }
 
@@ -82,7 +82,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new UserResource($user['data'])
+            'data' => $user['data']
         ]);
     }
 
@@ -116,7 +116,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new UserResource($user['data'])
+            'data' => $user['data']
         ]);
     }
 
