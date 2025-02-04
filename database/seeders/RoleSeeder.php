@@ -5,9 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
-class UserSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,12 +14,16 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $faker = \Faker\Factory::create();
-        DB::table('m_user')->insert([
+        DB::table('m_user_roles')->insert([
             'id' => $faker->uuid,
             'name' => 'Admin',
-            'email' => 'admin@landa.co.id',
-            'password' => Hash::make('devGanteng'),
-            'updated_security' => now()
+            'access' => '["admin"]'
         ]);
+        DB::table('m_user_roles')->insert([
+            'id' => $faker->uuid,
+            'name' => 'Staff',
+            'access' => '["staff"]'
+        ]);
+
     }
 }
