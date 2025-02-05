@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\RoleController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,12 @@ Route::prefix('v1')->group(function () {
     Route::post('/roles', [RoleController::class, 'store']);
     Route::put('/roles/{id}', [RoleController::class, 'update']);
     Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+
+    Route::get('/customers', [CustomerController::class, 'index']);
+    Route::get('/customers/{id}', [CustomerController::class, 'show']);
+    Route::post('/customers', [CustomerController::class, 'store']);
+    Route::patch('/customers/{id}', [CustomerController::class, 'update']);
+    Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
 });
 
 Route::get('/', function () {
