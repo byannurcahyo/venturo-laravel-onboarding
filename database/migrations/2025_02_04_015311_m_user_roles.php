@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_role', function (Blueprint $table) {
+        Schema::create('m_user_roles', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 50);
             $table->text('access', 50);
@@ -24,6 +24,7 @@ return new class extends Migration
             $table->uuid('deleted_by')
                 ->nullable();
 
+            $table->index('id');
             $table->index('name');
         });
     }
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('m_user_roles');
     }
 };

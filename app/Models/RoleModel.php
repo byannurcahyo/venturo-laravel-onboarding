@@ -13,14 +13,14 @@ class RoleModel extends Model implements CrudInterface
     use HasFactory;
     use Uuid;
     use SoftDeletes;
-    protected $table = 'm_role';
+    protected $table = 'm_user_roles';
     protected $fillable = [
         'name',
         'access',
     ];
     public $timestamp = true;
     protected $attributes = [
-        'access' => '[]',
+        'access' => '["create" => false, "read" => false, "update" => false,"delete" => false]',
     ];
     public function users()
     {

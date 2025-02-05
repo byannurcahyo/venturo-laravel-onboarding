@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('m_role')->insert([
+        DB::table('m_user_roles')->insert([
             'id' => '8d73e100-e164-417b-8420-25ed2f4092c3',
             'name' => 'Admin',
             'access' => json_encode([
@@ -23,7 +23,7 @@ class RoleSeeder extends Seeder
                 'delete' => true,
             ])
         ]);
-        DB::table('m_role')->insert([
+        DB::table('m_user_roles')->insert([
             'id' => 'dc492e77-742f-4c58-9479-f270887ffe5c',
             'name' => 'Staff',
             'access' => json_encode([

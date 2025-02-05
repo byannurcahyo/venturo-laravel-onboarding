@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_user', function (Blueprint $table) {
+        Schema::create('m_users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('m_user_roles_id')
                     ->comment('Fill with id from table m_user_roles');
@@ -40,6 +40,7 @@ return new class extends Migration
             $table->uuid('deleted_by')
                 ->nullable();
 
+            $table->index('m_user_roles_id');
             $table->index('email');
             $table->index('name');
             $table->index('updated_security');
@@ -51,6 +52,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_user');
+        Schema::dropIfExists('m_users');
     }
 };

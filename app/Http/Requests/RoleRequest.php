@@ -38,15 +38,15 @@ class RoleRequest extends FormRequest
     private function createRules(): array
     {
         return [
-            'name' => 'required|string|max:50',
-            'access' => 'required|array',
+            'name' => 'required|unique:m_role|string|max:50',
+            'access' => 'array',
         ];
     }
 
     private function updateRules(): array
     {
         return [
-            'name' => 'string|max:50',
+            'name' => 'unique:m_role|string|max:50',
             'access' => 'array',
         ];
     }
