@@ -30,7 +30,10 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => UserResource::collection($users['data'])
+            'data' => UserResource::collection($users['data']),
+            'meta' => [
+                'total' => $users['total']
+            ]
         ]);
     }
 

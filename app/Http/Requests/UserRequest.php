@@ -73,7 +73,7 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'photo' => 'required|file|image',
-            'email' => 'required|email|unique:m_user,email,' . $this->id,
+            'email' => 'required|email|unique:m_users,email,' . $this->id,
             'password' => 'required|string|min:6',
             'phone_number' => 'numeric',
         ];

@@ -21,11 +21,6 @@ class CustomerResource extends JsonResource
             'photo_url' => $this->photo ? url('storage/'.$this->photo) : null,
             'address' => $this->address,
             'email' => $this->user->email,
-            // 'list' => $this->collection($request),
-            // 'meta' => [
-            //     'links' => $this->getUrlRange(1, $this->lastPage()),
-            //     'total' => $this->total(),
-            // ]
         ];
     }
 }

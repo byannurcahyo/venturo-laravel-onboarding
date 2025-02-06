@@ -59,11 +59,11 @@ class CustomerModel extends Model implements CrudInterface
 
     public function edit(array $payload, string $id)
     {
-        return $this->where('id', $id)->update($payload);
+        return $this->find($id)->update($payload);
     }
 
     public function drop(string $id)
     {
-        return $this->find('id', $id)->delete();
+        return $this->find($id)->delete();
     }
 }

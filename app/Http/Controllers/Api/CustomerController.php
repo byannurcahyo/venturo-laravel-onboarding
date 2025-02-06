@@ -160,7 +160,7 @@ class CustomerController extends Controller
     {
         $customer = $this->customer->delete($id);
 
-        if (!$customer['status']) {
+        if (!$customer) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete customer'

@@ -38,7 +38,7 @@ class RoleRequest extends FormRequest
     private function createRules(): array
     {
         return [
-            'name' => 'required|unique:m_role|string|max:50',
+            'name' => 'required|unique:m_user_roles|string|max:50',
             'access' => 'array',
         ];
     }
@@ -46,7 +46,7 @@ class RoleRequest extends FormRequest
     private function updateRules(): array
     {
         return [
-            'name' => 'unique:m_role|string|max:50',
+            'name' => 'unique:m_user_roles|string|max:50',
             'access' => 'array',
         ];
     }

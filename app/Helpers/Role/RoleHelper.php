@@ -21,7 +21,8 @@ class RoleHelper extends Venturo
 
         return [
             'status' => true,
-            'data' => $roles
+            'data' => $roles,
+            'total' => $roles->total()
         ];
     }
 
@@ -61,11 +62,12 @@ class RoleHelper extends Venturo
     public function update(array $payload, string $id): array
     {
         try {
-            $role = $this->roleModel->edit($payload, $id);
+            $this->roleModel->edit($payload, $id);
+            $role = $this->getById($id);
 
             return [
                 'status' => true,
-                'data' => $role
+                'data' => $role['data']
             ];
         } catch (Throwable $e) {
             return [

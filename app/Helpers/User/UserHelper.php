@@ -22,7 +22,8 @@ class UserHelper extends Venturo
 
         return [
             'status' => true,
-            'data' => $users
+            'data' => $users,
+            'total' => $users->total()
         ];
     }
 

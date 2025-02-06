@@ -29,7 +29,10 @@ class RoleController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => RoleResource::collection($roles['data'])
+            'data' => RoleResource::collection($roles['data']),
+            'meta' => [
+                'total' => $roles['total']
+            ]
         ]);
     }
 
@@ -122,7 +125,7 @@ class RoleController extends Controller
     {
         $role = $this->role->delete($id);
 
-        if (!$role['status']) {
+        if (!$role) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete role'

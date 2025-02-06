@@ -20,7 +20,7 @@ class RoleModel extends Model implements CrudInterface
     ];
     public $timestamp = true;
     protected $attributes = [
-        'access' => '["create" => false, "read" => false, "update" => false,"delete" => false]',
+        'access' => '{"create":false,"read":false,"update":false,"delete":false}',
     ];
     public function users()
     {
@@ -54,11 +54,11 @@ class RoleModel extends Model implements CrudInterface
 
     public function edit(array $payload, string $id)
     {
-        return $this->where('id', $id)->update($payload);
+        return $this->find($id)->update($payload);
     }
 
     public function drop(string $id)
     {
-        return $this->fint($id)->delete();
+        return $this->find($id)->delete();
     }
 }
