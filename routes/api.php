@@ -5,7 +5,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CustomerController;
+use App\Http\Controllers\api\ProductCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,18 @@ Route::prefix('v1')->group(function () {
     Route::post('/customers', [CustomerController::class, 'store']);
     Route::patch('/customers/{id}', [CustomerController::class, 'update']);
     Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
+
+    Route::get('/categories', [ProductCategoryController::class, 'index']);
+    Route::get('/categories/{id}', [ProductCategoryController::class, 'show']);
+    Route::post('/categories', [ProductCategoryController::class, 'store']);
+    Route::put('/categories/{id}', [ProductCategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [ProductCategoryController::class, 'destroy']);
+
+    Route::get('products', [ProductController::class, 'index']);
+    Route::get('products/{id}', [ProductController::class, 'show']);
+    Route::post('products', [ProductController::class, 'store']);
+    Route::put('products/{id}', [ProductController::class, 'update']);
+    Route::delete('products/{id}', [ProductController::class, 'destroy']);
 });
 
 Route::get('/', function () {
