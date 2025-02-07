@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CustomerController;
 use App\Http\Controllers\api\ProductCategoryController;
+use App\Http\Controllers\api\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/customers', [CustomerController::class, 'index']);
     Route::get('/customers/{id}', [CustomerController::class, 'show']);
     Route::post('/customers', [CustomerController::class, 'store']);
-    Route::patch('/customers/{id}', [CustomerController::class, 'update']);
+    Route::put('/customers/{id}', [CustomerController::class, 'update']);
     Route::delete('/customers/{id}', [CustomerController::class, 'destroy']);
 
     Route::get('/categories', [ProductCategoryController::class, 'index']);
@@ -45,11 +46,17 @@ Route::prefix('v1')->group(function () {
     Route::put('/categories/{id}', [ProductCategoryController::class, 'update']);
     Route::delete('/categories/{id}', [ProductCategoryController::class, 'destroy']);
 
-    Route::get('products', [ProductController::class, 'index']);
-    Route::get('products/{id}', [ProductController::class, 'show']);
-    Route::post('products', [ProductController::class, 'store']);
-    Route::put('products/{id}', [ProductController::class, 'update']);
-    Route::delete('products/{id}', [ProductController::class, 'destroy']);
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{id}', [ProductController::class, 'show']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+
+    Route::get('/sales', [SalesController::class, 'index']);
+    Route::get('/sales/{id}', [SalesController::class, 'show']);
+    Route::post('/sales', [SalesController::class, 'store']);
+    Route::put('/sales/{id}', [SalesController::class, 'update']);
+    Route::delete('/sales/{id}', [SalesController::class, 'destroy']);
 });
 
 Route::get('/', function () {
