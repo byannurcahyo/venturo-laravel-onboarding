@@ -47,8 +47,7 @@ class ProductController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-        $payload = $request->only(['name', 'price', 'product_category_id', 'is_available', 'description', 'photo', 'details']);
-        $payload['m_product_category_id'] = $payload['product_category_id'];
+        $payload = $request->only(['name', 'price', 'm_product_category_id', 'is_available', 'description', 'photo', 'detail']);
         $product = $this->product->create($payload);
 
         if (!$product['status']) {
@@ -93,9 +92,7 @@ class ProductController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-        $payload = $request->only(['name', 'price', 'product_category_id', 'is_available', 'description', 'photo', 'details', 'details_deleted']);
-        $payload['m_product_category_id'] = $payload['product_category_id'];
-        unset($payload['product_category_id']);
+        $payload = $request->only(['name', 'price', 'm_product_category_id', 'is_available', 'description', 'photo', 'detail']);
         $product = $this->product->update($payload, $id);
 
         if (!$product['status']) {
@@ -120,12 +117,12 @@ class ProductController extends Controller
         if (!$product) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete category'
+                'message' => $product['message'] ?? 'Failed to delete product'
             ], 400);
         }
         return response()->json([
             'success' => true,
-            'meesage' => 'Category deleted successfully'
+            'meesage' => 'Product deleted successfully'
         ]);
     }
 }

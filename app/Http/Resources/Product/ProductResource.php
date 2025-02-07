@@ -18,12 +18,12 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'price' => $this->price,
-            'product_category_id' => $this->product_category_id,
-            'product_cateory_name' => isset($this->category) ? $this->category->name : "",
+            'product_category_id' => $this->m_product_category_id,
+            'product_category_name' => isset($this->category) ? $this->category->name : "",
             'is_available' => $this->is_available,
             'description' => $this->description,
             'photo_url' => $this->photo ? url('storage/'.$this->photo) : null,
-            'details' => ProductDetailResource::collection($this->details),
+            'detail' => ProductDetailResource::collection($this->details),
         ];
     }
 }

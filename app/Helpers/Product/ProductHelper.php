@@ -2,20 +2,22 @@
 
 namespace App\Helpers\Product;
 
+use Throwable;
 use App\Helpers\Venturo;
 use App\Models\ProductModel;
+use App\Models\ProductDetailModel;
 use Illuminate\Support\Facades\Hash;
-use Throwable;
 
 class ProductHelper extends Venturo
 {
     private $productModel;
     private $productDetailModel;
-    const PRODUCT_PHOTO_DIRECTORY = 'foto-produuk';
+    const PRODUCT_PHOTO_DIRECTORY = 'foto-produk';
 
     public function __construct()
     {
         $this->productModel = new ProductModel();
+        $this->productDetailModel = new ProductDetailModel();
     }
 
     private function uploadGetPayload(array $payload)
@@ -63,8 +65,17 @@ class ProductHelper extends Venturo
         try {
             $payload = $this->uploadGetPayload($payload);
             $this ->beginTransaction();
-            $product = $this->productModel->store($payload);
-            $this->insertUpdateDetail($payload['details'] ?? [], $product->id);
+            $product = $this->productModel->create([
+                'm_product_category_id' => $payload['m_product_category_id'],
+                'name' => $payload['name'],
+                'price' => $payload['price'],
+                'description' => $payload['description'],
+                'is_available' => $payload['is_available'],
+                'photo' => $payload['photo'] ?? null,
+            ]);
+
+            $this->insertProductDetail($payload['detail'], $product->id);
+
             $this->commitTransaction();
 
             return [
@@ -86,15 +97,23 @@ class ProductHelper extends Venturo
         try {
             $payload = $this->uploadGetPayload($payload);
             $this ->beginTransaction();
-            $this->productModel->edit($payload, $id);
-            $this->insertUpdateDetail($payload['details'] ?? [], $id);
-            $this->deleteDetail($payload['details_deleted'] ?? []);
-            $product = $this->getById($id);
+            $product = $this->productModel->find($id);
+            $product->update([
+                'm_product_category_id' => $payload['m_product_category_id'],
+                'name' => $payload['name'],
+                'price' => $payload['price'],
+                'description' => $payload['description'],
+                'is_available' => $payload['is_available'],
+                'photo' => $payload['photo'] ?? null,
+            ]);
+
+            $this->updateProductDetail($payload['detail'], $product->id);
+
             $this->commitTransaction();
 
             return [
                 'status' => true,
-                'data' => $product['data']
+                'data' => $product
             ];
         } catch (Throwable $e) {
             return [
@@ -108,8 +127,16 @@ class ProductHelper extends Venturo
     {
         try {
             $this->beginTransaction();
-            $this->productModel->drop($id);
-            $this->productDetailModel->drop($id);
+            $product = $this->productModel->find($id);
+            if (empty($product)) {
+                return [
+                    'status' => false,
+                    'message' => 'Product not found'
+                ];
+            }
+            $this->productDetailModel->where('m_product_id', $id)->delete();
+
+            $product->delete();
             $this->commitTransaction();
 
             return [
@@ -126,31 +153,38 @@ class ProductHelper extends Venturo
         }
     }
 
-    private function insertUpdateDetail(array $details, string $productId): bool
+    private function insertProductDetail(array $details, string $productId): void
     {
-        if (empty($details)) {
-            return false;
-        }
         foreach ($details as $detail) {
-            if (isset($detail['is_added']) && $detail['is_added']) {
-                $detail['m_product_id'] = $productId;
-                $this->productDetailModel->store($detail);
+            $this->productDetailModel->store([
+                'm_product_id' => $productId,
+                'type' => $detail['type'],
+                'description' => $detail['description'],
+                'price' => $detail['price']
+            ]);
+        }
+    }
+
+    private function updateProductDetail(array $details, string $productId): void
+    {
+        $checkProductDetail = $this->productDetailModel->where('m_product_id', $productId)->get();
+        $checkId = $checkProductDetail->pluck('id')->toArray();
+
+        foreach ($details as $detail) {
+            if (!empty($detail['id']) && in_array($detail['id'], $checkId)) {
+                $this->productDetailModel->where('id', $detail['id'])->update([
+                    'type' => $detail['type'],
+                    'description' => $detail['description'],
+                    'price' => $detail['price']
+                ]);
             } else {
-                $detail['m_product_id'] = $productId;
-                $this->productDetailModel->edit($detail, $detail['id']);
+                $this->productDetailModel->create([
+                    'm_product_id' => $productId,
+                    'type' => $detail['type'],
+                    'description' => $detail['description'],
+                    'price' => $detail['price']
+                ]);
             }
         }
-        return true;
     }
-
-    private function deleteDetail(array $detailsDeleted): bool
-    {
-        if (empty($detailsDeleted)) {
-            return false;
-        }
-        foreach ($detailsDeleted as $detail) {
-            $this->productDetailModel->drop($detail['id']);
-        }
-    }
-
 }

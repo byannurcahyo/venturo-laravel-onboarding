@@ -19,6 +19,8 @@ return new class extends Migration
                 ->comment('Fill with type of product detail');
             $table->string('description', 255)
                 ->comment('Fill with description of product detail, ex: Topping Telur');
+            $table->double('price')->default(0)
+                ->comment('Fill price of product details');
             $table->timestamps();
             $table->softDeletes();
             $table->integer('created_by')->default(0);

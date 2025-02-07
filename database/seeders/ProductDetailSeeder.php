@@ -18,18 +18,21 @@ class ProductDetailSeeder extends Seeder
             'm_product_id' => 'd323521a-d261-4e25-a643-9ccb0d7e866a',
             'type' => 'Topping',
             'description' => 'Oreo',
+            'price' => 2000,
         ]);
         DB::table('m_product_detail')->insert([
             'id' => '14a58d5d-6898-4912-8bc8-52f63c356f41',
             'm_product_id' => 'e73b4670-858b-40f0-9d9e-b65b7f4bc89a',
             'type' => 'Topping',
             'description' => 'Cream',
+            'price' => 1000,
         ]);
         DB::table('m_product_detail')->insert([
             'id' => 'ebffa519-2be8-4e8c-a031-3942bc750d33',
             'm_product_id' => 'ded1829e-211e-475d-adbb-c46ce916dabe',
             'type' => 'Level',
             'description' => 'Level 1',
+            'price' => 1000,
         ]);
     }
 }

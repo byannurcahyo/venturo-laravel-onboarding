@@ -22,6 +22,11 @@ class ProductDetailModel extends Model implements CrudInterface
     ];
     protected $table = 'm_product_detail';
 
+    public function product()
+    {
+        return $this->belongsTo(ProductModel::class, 'm_product_id', 'id');
+    }
+
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = '')
     {
         $user = $this->query();

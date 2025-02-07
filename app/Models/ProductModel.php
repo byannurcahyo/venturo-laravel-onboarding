@@ -24,6 +24,16 @@ class ProductModel extends Model implements CrudInterface
     ];
     protected $table = 'm_product';
 
+    public function category()
+    {
+        return $this->belongsTo(ProductCategoryModel::class, 'm_product_category_id', 'id');
+    }
+
+    public function details()
+    {
+        return $this->hasMany(ProductDetailModel::class, 'm_product_id', 'id');
+    }
+
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = '')
     {
         $user = $this->query();
@@ -64,15 +74,5 @@ class ProductModel extends Model implements CrudInterface
     public function drop(string $id)
     {
         return $this->find($id)->delete();
-    }
-
-    public function category()
-    {
-        return $this->hasOne(ProductCategoryModel::class, 'id', 'm_product_category_id');
-    }
-
-    public function details()
-    {
-        return $this->hasMany(ProductDetailModel::class, 'm_product_id', 'id');
     }
 }
