@@ -18,7 +18,7 @@ class RoleModel extends Model implements CrudInterface
         'name',
         'access',
     ];
-    public $timestamp = true;
+    public $timestamps = true;
     protected $attributes = [
         'access' => '{"create":false,"read":false,"update":false,"delete":false}',
     ];

@@ -22,7 +22,7 @@ class UserModel extends Model implements CrudInterface
         'photo',
         'phone_number',
     ];
-    public $timestamp = true;
+    public $timestamps = true;
     protected $attributes = [
         'm_user_roles_id' => 'dc492e77-742f-4c58-9479-f270887ffe5c',
     ];
