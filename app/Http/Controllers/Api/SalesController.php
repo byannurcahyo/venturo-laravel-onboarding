@@ -29,6 +29,7 @@ class SalesController extends Controller
         return response()->json([
             'success' => true,
             'data' => SalesResource::collection($sales['data']),
+            'filter' => $filter,
             'meta' => [
                 'total' => $sales['total']
             ]
@@ -39,16 +40,14 @@ class SalesController extends Controller
     {
         $filter = [
             'm_customer_id' => $request->customer_id ?? '',
-            'date' => $request->date ?? '',
+            'date_from' => $request->date_from ?? '',
+            'date_to' => $request->date_to ?? '',
         ];
-        $sales = $this->sales->getAll($filter, 25, request()->sort ?? '');
+        $sales = $this->sales->getSalesByCustomer($filter, 25, request()->sort ?? '');
 
         return response()->json([
             'success' => true,
             'data' => $sales['data'],
-            'meta' => [
-                'total' => $sales['total']
-            ]
         ]);
     }
 

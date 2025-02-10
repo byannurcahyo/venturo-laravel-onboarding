@@ -5,10 +5,11 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\api\SalesController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\CustomerController;
+use App\Http\Controllers\api\ReportSalesController;
 use App\Http\Controllers\api\ProductCategoryController;
-use App\Http\Controllers\api\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/sales', [SalesController::class, 'store']);
     Route::put('/sales/{id}', [SalesController::class, 'update']);
     Route::delete('/sales/{id}', [SalesController::class, 'destroy']);
+
+    Route::get('/report/sales-menu', [ReportSalesController::class, 'viewSalesCategories']);
+    Route::get('/sales-customers', [SalesController::class, 'getSalesByCustomer']);
+
 });
 
 Route::get('/', function () {

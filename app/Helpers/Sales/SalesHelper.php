@@ -29,6 +29,34 @@ class SalesHelper extends Venturo
         ];
     }
 
+    public function getSalesByCustomer(array $filter): array
+    {
+        $sales = $this->salesModel->with(['customer', 'details.product']);
+
+        if (!empty($filter['customer_id'])) {
+            $sales->where('m_customer_id', $filter['customer_id']);
+        }
+
+        if (!empty($filter['start_date']) && !empty($filter['end_date'])) {
+            $sales->whereBetween('date', [$filter['start_date'], $filter['end_date']]);
+        }
+        $sales = $sales->get();
+
+        $groupedSales = $sales->groupBy('customer.name')->map(function ($customerSales) {
+            return [
+                'customer_name' => $customerSales->first()->customer->name,
+                'total_sales' => $customerSales->sum('details.price'),
+                'transactions' => $customerSales,
+            ];
+        });
+
+        return [
+            'status' => true,
+            'data' => $groupedSales->values(),
+            'total' => $groupedSales->sum('total_sales')
+        ];
+    }
+
     public function getById(string $id): array
     {
         $sales = $this->salesModel->getById($id);
