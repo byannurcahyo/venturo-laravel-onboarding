@@ -8,9 +8,9 @@ use Maatwebsite\Excel\Concerns\FromView;
 class ReportSalesCategory implements FromView
 {
     private $reports;
-    public function __construct(array $reports)
+    public function __construct(array $sales)
     {
-        $this->reports = $reports;
+        $this->reports = $sales;
     }
 
     public function view(): View

@@ -22,11 +22,13 @@ class ReportSalesController extends Controller
         $categoryId = $request->category_id ?? null;
         $isExportExcel = $request->is_export_excel ?? null;
 
-        $sales = $this->salesCategory->getSalesCategories($startDate, $endDate, $categoryId);
+        $sales = $this->salesCategory->get($startDate, $endDate, $categoryId);
         if ($isExportExcel) {
             return Excel::download(new ReportSalesCategory($sales), 'report-sales-categories.xlsx');
         }
-        return response()->success($sales['data'], '', [
+        return response()->json([
+            'success' => true,
+            'data' => $sales['data'],
             'dates' => $sales['dates'] ?? [],
             'total_per_date' => $sales['total_per_date'] ?? [],
             'grand_total' => $sales['total'] ?? 0,
