@@ -25,12 +25,13 @@ class RoleController extends Controller
             'name' => $request->name ?? '',
             'access' => $request->access ?? '',
         ];
-        $roles = $this->role->getAll($filter, 5, $request->sort ?? '');
+        $roles = $this->role->getAll($filter, 10, $request->sort ?? '');
 
         return response()->json([
             'success' => true,
             'data' => RoleResource::collection($roles['data']),
             'meta' => [
+                'links' => $roles['links'],
                 'total' => $roles['total']
             ]
         ]);
@@ -63,7 +64,8 @@ class RoleController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new RoleResource($role['data'])
+            'data' => new RoleResource($role['data']),
+            'message' => 'Role created successfully'
         ]);
     }
 
@@ -114,7 +116,8 @@ class RoleController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new RoleResource($role['data'])
+            'data' => new RoleResource($role['data']),
+            'message' => 'Role updated successfully'
         ]);
     }
 

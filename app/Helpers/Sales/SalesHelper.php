@@ -25,6 +25,7 @@ class SalesHelper extends Venturo
         return [
             'status' => true,
             'data' => $sales,
+            'links' => array_values($sales->getUrlRange(1, $sales->lastPage())),
             'total' => $sales->total()
         ];
     }

@@ -25,12 +25,13 @@ class ProductController extends Controller
             'm_product_category_id' => request()->m_product_category_id ?? '',
             'is_available' => request()->is_available ?? '',
         ];
-        $products = $this->product->getAll($filter, 25, request()->sort ?? '');
+        $products = $this->product->getAll($filter, 10, request()->sort ?? '');
 
         return response()->json([
             'success' => true,
             'data' => ProductResource::collection($products['data']),
             'meta' => [
+                'links' => $products['links'],
                 'total' => $products['total']
             ]
         ]);
@@ -58,7 +59,8 @@ class ProductController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data' => new ProductResource($product['data'])
+            'data' => new ProductResource($product['data']),
+            'message' => 'Product created successfully'
         ]);
     }
 
@@ -103,7 +105,8 @@ class ProductController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data' => new ProductResource($product['data'])
+            'data' => new ProductResource($product['data']),
+            'message' => 'Product updated successfully'
         ]);
     }
 

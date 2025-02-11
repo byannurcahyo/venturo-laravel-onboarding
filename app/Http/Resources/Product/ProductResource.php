@@ -23,7 +23,7 @@ class ProductResource extends JsonResource
             'is_available' => $this->is_available,
             'description' => $this->description,
             'photo_url' => $this->photo ? url('storage/'.$this->photo) : null,
-            'detail' => ProductDetailResource::collection($this->details),
+            'details' => ProductDetailResource::collection($this->details),
         ];
     }
 }

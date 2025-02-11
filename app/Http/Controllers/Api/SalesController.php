@@ -29,8 +29,8 @@ class SalesController extends Controller
         return response()->json([
             'success' => true,
             'data' => SalesResource::collection($sales['data']),
-            'filter' => $filter,
             'meta' => [
+                'links' => $sales['links'],
                 'total' => $sales['total']
             ]
         ]);
@@ -73,7 +73,8 @@ class SalesController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data' => new SalesResource($sales['data'])
+            'data' => new SalesResource($sales['data']),
+            'message' => 'Sales created successfully'
         ]);
     }
 
@@ -118,7 +119,8 @@ class SalesController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data' => new SalesResource($sales['data'])
+            'data' => new SalesResource($sales['data']),
+            'message' => 'Sales updated successfully'
         ]);
     }
 

@@ -44,7 +44,7 @@ class CategoryRequest extends FormRequest
     private function updateRules(): array
     {
         return [
-            'name' => 'string|max:100',
+            'name' => 'nullable|string|max:100',
         ];
     }
 }

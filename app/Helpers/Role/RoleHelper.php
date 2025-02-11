@@ -22,6 +22,7 @@ class RoleHelper extends Venturo
         return [
             'status' => true,
             'data' => $roles,
+            'links' => array_values($roles->getUrlRange(1, $roles->lastPage())),
             'total' => $roles->total()
         ];
     }

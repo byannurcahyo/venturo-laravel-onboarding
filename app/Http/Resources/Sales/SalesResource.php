@@ -17,8 +17,9 @@ class SalesResource extends JsonResource
         return [
             'id' => $this->id,
             'm_customer_id' => $this->m_customer_id,
-            'product_detail' => SalesDetailResource::collection($this->details),
-
+            'm_customer_name' => $this->customer->name,
+            'date' => $this->date,
+            'details' => SalesDetailResource::collection($this->details),
         ];
     }
 }

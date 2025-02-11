@@ -23,12 +23,13 @@ class ProductCategoryController extends Controller
         $filter = [
             'name' => $request->name ?? '',
         ];
-        $categories = $this->category->getAll($filter, 25, $request->sort ?? '');
+        $categories = $this->category->getAll($filter, 10, $request->sort ?? '');
 
         return response()->json([
             'success' => true,
             'data' => CategoryResource::collection($categories['data']),
             'meta' => [
+                'links' => $categories['links'],
                 'total' => $categories['total']
             ]
         ]);
@@ -56,7 +57,8 @@ class ProductCategoryController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data' => new CategoryResource($category['data'])
+            'data' => new CategoryResource($category['data']),
+            'message' => 'Category created successfully'
         ]);
     }
 
@@ -101,7 +103,8 @@ class ProductCategoryController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data' => new CategoryResource($category['data'])
+            'data' => new CategoryResource($category['data']),
+            'message' => 'Category updated successfully'
         ]);
     }
 

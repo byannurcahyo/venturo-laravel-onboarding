@@ -71,11 +71,12 @@ class UserRequest extends FormRequest
 
     private function updateRules(): array {
         return [
-            'name' => 'required|string|max:100',
-            'photo' => 'required|file|image',
-            'email' => 'required|email|unique:m_users,email,' . $this->id,
-            'password' => 'required|string|min:6',
+            'name' => 'nullable|string|max:100',
+            'photo' => 'nullable|file|image',
+            'email' => 'nullable|email|unique:m_users,email,' . $this->id,
+            'password' => 'nullable|string|min:6',
             'phone_number' => 'numeric',
+            'm_user_roles_id' => 'nullable|exists:m_user_roles,id'
         ];
     }
 

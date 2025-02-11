@@ -40,6 +40,7 @@ class ProductHelper extends Venturo
         return [
             'status' => true,
             'data' => $product,
+            'links' => array_values($product->getUrlRange(1, $product->lastPage())),
             'total' => $product->total()
         ];
     }

@@ -28,12 +28,13 @@ class CustomerController extends Controller
         $filter = [
             'name' => $request->name ?? '',
         ];
-        $customers = $this->customer->getAll($filter, 5, $request->sort ?? '');
+        $customers = $this->customer->getAll($filter, 10, $request->sort ?? '');
 
         return response()->json([
             'success' => true,
             'data' => CustomerResource::collection($customers['data']),
             'meta' => [
+                'links' => $customers['links'],
                 'total' => $customers['total']
             ]
         ]);
@@ -90,7 +91,8 @@ class CustomerController extends Controller
             DB::commit();
             return response()->json([
                 'success' => true,
-                'data' => new CustomerResource($customer['data'])
+                'data' => new CustomerResource($customer['data']),
+                'message' => 'Customer created successfully'
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -149,7 +151,8 @@ class CustomerController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new CustomerResource($customer['data'])
+            'data' => new CustomerResource($customer['data']),
+            'message' => 'Customer updated successfully'
         ]);
     }
 

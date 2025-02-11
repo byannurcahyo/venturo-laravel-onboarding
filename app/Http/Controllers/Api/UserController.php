@@ -26,12 +26,13 @@ class UserController extends Controller
             'name' => $request->name ?? '',
             'email' => $request->email ?? '',
         ];
-        $users = $this->user->getAll($filter, 25, $request->sort ?? '');
+        $users = $this->user->getAll($filter, 10, $request->sort ?? '');
 
         return response()->json([
             'success' => true,
             'data' => UserResource::collection($users['data']),
             'meta' => [
+                'links' => $users['links'],
                 'total' => $users['total']
             ]
         ]);
@@ -67,7 +68,8 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new UserResource($user['data'])
+            'data' => new UserResource($user['data']),
+            'message' => 'User created successfully'
         ]);
     }
 
@@ -121,7 +123,8 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => new UserResource($user['data'])
+            'data' => new UserResource($user['data']),
+            'message' => 'User updated successfully'
         ]);
     }
 

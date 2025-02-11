@@ -23,6 +23,7 @@ class UserHelper extends Venturo
         return [
             'status' => true,
             'data' => $users,
+            'links' => array_values($users->getUrlRange(1, $users->lastPage())),
             'total' => $users->total()
         ];
     }

@@ -36,6 +36,7 @@ class CustomerHelper extends Venturo
         return [
             'status' => true,
             'data' => $customers,
+            'links' => array_values($customers->getUrlRange(1, $customers->lastPage())),
             'total' => $customers->total()
         ];
     }

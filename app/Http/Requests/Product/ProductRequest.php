@@ -53,26 +53,26 @@ class ProductRequest extends FormRequest
             'photo' => 'nullable|file|image',
             'description' => 'required|string',
             'is_available' => 'required|numeric|max:1',
-            'm_product_category_id' => 'required',
+            'm_product_category_id' => 'required|exists:m_product_categories,id',
             'detail' => 'required|array|min:1',
             'detail.*.type' => 'required',
             'detail.*.description' => 'required',
-            'detail.*.price' => 'numeric',
+            'detail.*.price' => 'required|numeric',
         ];
     }
 
     private function updateRules(): array
     {
         return [
-            'name' => 'required|string|max:150',
-            'price' => 'required|numeric',
+            'name' => 'nullable|string|max:150',
+            'price' => 'nullable|numeric',
             'photo' => 'nullable|file|image',
-            'is_available' => 'required|numeric|max:1',
-            'm_product_category_id' => 'required',
-            'detail' => 'required|array|min:1',
-            'detail.*.type' => 'required',
-            'detail.*.description' => 'required',
-            'detail.*.price' => 'numeric',
+            'is_available' => 'nullable|numeric|max:1',
+            'm_product_category_id' => 'nullable|exists:m_product_categories,id',
+            'detail' => 'nullable|array|min:1',
+            'detail.*.type' => 'nullable',
+            'detail.*.description' => 'nullable',
+            'detail.*.price' => 'nullable|numeric',
         ];
     }
 }

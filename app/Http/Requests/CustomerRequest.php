@@ -52,10 +52,12 @@ class CustomerRequest extends FormRequest
     private function updateRules(): array
     {
         return [
-            'name' => 'string|max:100',
-            'address' => 'string',
-            'photo' => 'file|image',
-            'phone' => 'numeric',
+            'name' => 'nullable|string|max:100',
+            'email' => 'nullable|email|unique:m_users',
+            'password' => 'nullable|string|min:6',
+            'address' => 'nullable|string',
+            'photo' => 'nullable|file|image',
+            'phone' => 'nullable|numeric',
         ];
     }
 

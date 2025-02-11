@@ -23,6 +23,7 @@ class ProductCategoryHelper extends Venturo
         return [
             'status' => true,
             'data' => $categories,
+            'links' => array_values($categories->getUrlRange(1, $categories->lastPage())),
             'total' => $categories->total()
         ];
     }
