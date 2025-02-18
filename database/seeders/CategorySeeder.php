@@ -15,7 +15,7 @@ class CategorySeeder extends Seeder
     {
         DB::table('m_product_category')->insert([
             'id' => '9707d930-8cea-4ff8-b250-59a58af2f4b2',
-            'name' => 'Dessert',
+            'name' => 'Main Course',
         ]);
         DB::table('m_product_category')->insert([
             'id' => 'c5b95d69-4f49-4531-9f98-8236572c27bb',
@@ -24,6 +24,10 @@ class CategorySeeder extends Seeder
         DB::table('m_product_category')->insert([
             'id' => 'e1325fc2-6e3f-486c-a0d9-b2fa81d29342',
             'name' => 'Snack',
+        ]);
+        DB::table('m_product_category')->insert([
+            'id' => '5fed4245-4bd2-4d08-a313-8c40180003c3',
+            'name' => 'Add On',
         ]);
     }
 }

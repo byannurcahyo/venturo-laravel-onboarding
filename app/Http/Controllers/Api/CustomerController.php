@@ -29,7 +29,6 @@ class CustomerController extends Controller
             'name' => $request->name ?? '',
         ];
         $customers = $this->customer->getAll($filter, 10, $request->sort ?? '');
-
         return response()->json([
             'success' => true,
             'data' => CustomerResource::collection($customers['data']),
@@ -39,7 +38,6 @@ class CustomerController extends Controller
             ]
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -53,10 +51,8 @@ class CustomerController extends Controller
         }
         try {
             DB::beginTransaction();
-
-            $payload_user = $request->only(['email', 'name', 'password']);
+            $payload_user = $request->only(['email', 'name', 'password', 'phone_number']);
             $user = $this->user->create($payload_user);
-
             if (!$user['status'] || empty($user['data'])) {
                 DB::rollBack();
                 return response()->json([
@@ -64,9 +60,7 @@ class CustomerController extends Controller
                     'message' => "Failed to create user"
                 ], 500);
             }
-
             $userId = is_object($user['data']) ? $user['data']->id : ($user['data']['id'] ?? null);
-
             if (!$userId) {
                 DB::rollBack();
                 return response()->json([
@@ -74,12 +68,9 @@ class CustomerController extends Controller
                     'message' => "User ID is missing"
                 ], 500);
             }
-
             $payload_customer = $request->only(['name', 'address', 'phone', 'photo']);
             $payload_customer['m_user_id'] = $userId;
-
             $customer = $this->customer->create($payload_customer);
-
             if (!$customer['status']) {
                 DB::rollBack();
                 return response()->json([
@@ -87,7 +78,6 @@ class CustomerController extends Controller
                     'message' => $customer['message'] ?? 'Failed to create customer'
                 ], 500);
             }
-
             DB::commit();
             return response()->json([
                 'success' => true,
@@ -102,7 +92,6 @@ class CustomerController extends Controller
             ], 500);
         }
     }
-
     /**
      * Display the specified resource.
      */
@@ -115,13 +104,11 @@ class CustomerController extends Controller
                 'message' => 'Customer not found'
             ], 404);
         }
-
         return response()->json([
             'success' => true,
             'data' => new CustomerResource($customer['data'])
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -133,46 +120,113 @@ class CustomerController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-
-        $payload = $request->only([
-            'name',
-            'address',
-            'photo',
-            'phone',
-        ]);
-        $customer = $this->customer->update($payload, $id);
-
-        if (!$customer['status']) {
+        try {
+            DB::beginTransaction();
+            $customerData = $this->customer->getById($id);
+            if (!$customerData['status'] || empty($customerData['data'])) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer not found'
+                ], 404);
+            }
+            $customer = $customerData['data'];
+            $userId = is_object($customer) ? $customer->m_user_id : ($customer['m_user_id'] ?? null);
+            if (!$userId) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User ID is missing'
+                ], 500);
+            }
+            $payload_user = $request->only(['email', 'name', 'password']);
+            if (!empty($payload_user)) {
+                $userUpdate = $this->user->update($payload_user, $userId);
+                if (!$userUpdate['status']) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Failed to update user'
+                    ], 500);
+                }
+            }
+            $payload_customer = $request->only(['name', 'address', 'phone', 'photo']);
+            if (!empty($payload_customer)) {
+                $customerUpdate = $this->customer->update($payload_customer, $id);
+                if (!$customerUpdate['status']) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Failed to update customer'
+                    ], 500);
+                }
+            }
+            DB::commit();
+            $updatedCustomer = $this->customer->getById($id);
+            return response()->json([
+                'success' => true,
+                'data' => new CustomerResource($updatedCustomer['data']),
+                'message' => 'Customer updated successfully'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update customer'
+                'message' => $e->getMessage()
             ], 500);
         }
-
-        return response()->json([
-            'success' => true,
-            'data' => new CustomerResource($customer['data']),
-            'message' => 'Customer updated successfully'
-        ]);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $customer = $this->customer->delete($id);
-
-        if (!$customer) {
+        try {
+            DB::beginTransaction();
+            $customerData = $this->customer->getById($id);
+            if (!$customerData['status'] || empty($customerData['data'])) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer not found'
+                ], 404);
+            }
+            $customer = $customerData['data'];
+            $userId = is_object($customer) ? $customer->m_user_id : ($customer['m_user_id'] ?? null);
+            if (!$userId) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User ID is missing'
+                ], 500);
+            }
+            $customerDelete = $this->customer->delete($id);
+            if (!$customerDelete) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete customer'
+                ], 500);
+            }
+            $userDelete = $this->user->delete($userId);
+            if (!$userDelete) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete user'
+                ], 500);
+            }
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer and user deleted successfully'
+            ]);
+        } catch (\Throwable $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete customer'
+                'message' => $e->getMessage()
             ], 500);
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer deleted successfully'
-        ]);
     }
 }

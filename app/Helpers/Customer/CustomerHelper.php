@@ -25,14 +25,12 @@ class CustomerHelper extends Venturo
         } else {
             unset($payload['photo']);
         }
-
         return $payload;
     }
 
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = ''): array
     {
         $customers = $this->customerModel->getAll($filter, $itemPerPage, $sort);
-
         return [
             'status' => true,
             'data' => $customers,
@@ -50,7 +48,6 @@ class CustomerHelper extends Venturo
                 'data' => null
             ];
         }
-
         return [
             'status' => true,
             'data' => $customer
@@ -62,7 +59,6 @@ class CustomerHelper extends Venturo
         try {
             $payload = $this->uploadGetPayload($payload);
             $customer = $this->customerModel->store($payload);
-
             return [
                 'status' => true,
                 'data' => $customer
@@ -81,7 +77,6 @@ class CustomerHelper extends Venturo
             $payload = $this->uploadGetPayload($payload);
             $this->customerModel->edit($payload, $id);
             $customer = $this->getById($id);
-
             return [
                 'status' => true,
                 'data' => $customer['data']

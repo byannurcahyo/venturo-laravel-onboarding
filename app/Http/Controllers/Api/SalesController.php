@@ -11,6 +11,7 @@ use App\Http\Resources\Sales\SalesResource;
 class SalesController extends Controller
 {
     private $sales;
+
     public function __construct()
     {
         $this->sales = new SalesHelper();
@@ -25,7 +26,6 @@ class SalesController extends Controller
             'date' => request()->date ?? '',
         ];
         $sales = $this->sales->getAll($filter, 5, request()->sort ?? '');
-
         return response()->json([
             'success' => true,
             'data' => SalesResource::collection($sales['data']),
@@ -44,13 +44,11 @@ class SalesController extends Controller
             'date_to' => $request->date_to ?? '',
         ];
         $sales = $this->sales->getSalesByCustomer($filter, 25, request()->sort ?? '');
-
         return response()->json([
             'success' => true,
             'data' => $sales['data'],
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -64,7 +62,6 @@ class SalesController extends Controller
         }
         $payload = $request->only(['m_customer_id', 'date', 'product_detail']);
         $sales = $this->sales->create($payload);
-
         if (!$sales['status']) {
             return response()->json([
                 'success' => false,
@@ -77,14 +74,12 @@ class SalesController extends Controller
             'message' => 'Sales created successfully'
         ]);
     }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $sales = $this->sales->getById($id);
-
         if (!$sales['status']) {
             return response()->json([
                 'success' => false,
@@ -96,7 +91,6 @@ class SalesController extends Controller
             'data' => new SalesResource($sales['data'])
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -110,7 +104,6 @@ class SalesController extends Controller
         }
         $payload = $request->only(['m_customer_id', 'date', 'product_detail']);
         $sales = $this->sales->update($payload, $id);
-
         if (!$sales['status']) {
             return response()->json([
                 'success' => false,
@@ -123,25 +116,21 @@ class SalesController extends Controller
             'message' => 'Sales updated successfully'
         ]);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         $sales = $this->sales->delete($id);
-
         if (!$sales['status']) {
             return response()->json([
                 'success' => false,
                 'message' => $sales['message'] ?? 'Failed to delete sales'
             ], 400);
         }
-
         return response()->json([
             'success' => true,
             'message' => 'Sales deleted successfully'
         ]);
     }
-
 }

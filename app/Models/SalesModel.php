@@ -13,12 +13,12 @@ class SalesModel extends Model implements CrudInterface
     use HasFactory;
     use SoftDeletes;
     use Uuid;
-    protected $table = 't_sales';
+    public $timestamps = true;
     protected $fillable = [
         'm_customer_id',
         'date',
     ];
-    public $timestamps = true;
+    protected $table = 't_sales';
 
     public function customer()
     {
@@ -36,11 +36,9 @@ class SalesModel extends Model implements CrudInterface
         if (!empty($filter['type'])) {
             $sales->where('type', 'like', '%' . $filter['type'] . '%');
         }
-
         $sort = $sort ?: 'id DESC';
         $sales->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $sales->paginate($itemPerPage)->appends('sort', $sort);
     }
 
@@ -55,7 +53,6 @@ class SalesModel extends Model implements CrudInterface
             'details',
             'details.product.category'
         ]);
-
         if (!empty($startDate) && !empty($endDate)) {
             $sales->whereRaw('date >= "' . $startDate . ' 00:00:01" and date <= "' . $endDate . ' 23:59:59"');
         }

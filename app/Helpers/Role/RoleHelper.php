@@ -10,6 +10,7 @@ use Throwable;
 class RoleHelper extends Venturo
 {
     private $roleModel;
+
     public function __construct()
     {
         $this->roleModel = new RoleModel();
@@ -18,7 +19,6 @@ class RoleHelper extends Venturo
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = ''): array
     {
         $roles = $this->roleModel->getAll($filter, $itemPerPage, $sort);
-
         return [
             'status' => true,
             'data' => $roles,
@@ -36,7 +36,6 @@ class RoleHelper extends Venturo
                 'data' => null
             ];
         }
-
         return [
             'status' => true,
             'data' => $role
@@ -47,7 +46,6 @@ class RoleHelper extends Venturo
     {
         try {
             $role = $this->roleModel->store($payload);
-
             return [
                 'status' => true,
                 'data' => $role
@@ -65,7 +63,6 @@ class RoleHelper extends Venturo
         try {
             $this->roleModel->edit($payload, $id);
             $role = $this->getById($id);
-
             return [
                 'status' => true,
                 'data' => $role['data']

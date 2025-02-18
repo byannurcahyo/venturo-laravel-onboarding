@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class RoleRequest extends FormRequest
 {
+    public $validator;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -14,14 +15,10 @@ class RoleRequest extends FormRequest
     {
         return true;
     }
-
-    public $validator;
-
     public function failedValidation(Validator $validator)
     {
         $this->validator = $validator;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,7 +31,6 @@ class RoleRequest extends FormRequest
         }
         return $this->updateRules();
     }
-
     private function createRules(): array
     {
         return [
@@ -42,7 +38,6 @@ class RoleRequest extends FormRequest
             'access' => 'array',
         ];
     }
-
     private function updateRules(): array
     {
         return [

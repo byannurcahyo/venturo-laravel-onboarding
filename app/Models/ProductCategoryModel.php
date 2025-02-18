@@ -27,11 +27,9 @@ class ProductCategoryModel extends Model implements CrudInterface
         if (!empty($filter['name'])) {
             $user->where('name', 'like', '%' . $filter['name'] . '%');
         }
-
         $sort = $sort ?: 'id DESC';
         $user->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $user->paginate($itemPerPage)->appends('sort', $sort);
     }
 

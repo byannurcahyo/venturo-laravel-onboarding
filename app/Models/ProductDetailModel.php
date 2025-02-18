@@ -33,11 +33,9 @@ class ProductDetailModel extends Model implements CrudInterface
         if (!empty($filter['type'])) {
             $user->where('type', 'like', '%' . $filter['type'] . '%');
         }
-
         $sort = $sort ?: 'id DESC';
         $user->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $user->paginate($itemPerPage)->appends('sort', $sort);
     }
 

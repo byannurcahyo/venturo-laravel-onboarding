@@ -35,15 +35,12 @@ class CustomerModel extends Model implements CrudInterface
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = '')
     {
         $customer = $this->query();
-
         if (!empty($filter['name'])) {
             $customer->where('name', 'LIKE', '%'.$filter['name'].'%');
         }
-
         $sort = $sort ?: 'id DESC';
         $customer->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $customer->paginate($itemPerPage)->appends('sort', $sort);
     }
 

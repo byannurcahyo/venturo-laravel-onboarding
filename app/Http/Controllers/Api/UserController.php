@@ -27,7 +27,6 @@ class UserController extends Controller
             'email' => $request->email ?? '',
         ];
         $users = $this->user->getAll($filter, 10, $request->sort ?? '');
-
         return response()->json([
             'success' => true,
             'data' => UserResource::collection($users['data']),
@@ -37,7 +36,6 @@ class UserController extends Controller
             ]
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -49,7 +47,6 @@ class UserController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-
         $payload = $request->only([
             'name',
             'email',
@@ -58,41 +55,35 @@ class UserController extends Controller
             'm_user_roles_id'
         ]);
         $user = $this->user->create($payload);
-
         if (!$user['status']) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create user'
             ], 500);
         }
-
         return response()->json([
             'success' => true,
             'data' => new UserResource($user['data']),
             'message' => 'User created successfully'
         ]);
     }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $user = $this->user->getById($id);
-
         if (!$user['status']) {
             return response()->json([
                 'success' => false,
                 'message' => 'User not found'
             ], 404);
         }
-
         return response()->json([
             'success' => true,
             'data' => new UserResource($user['data'])
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -104,7 +95,6 @@ class UserController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-
         $payload = $request->only([
             'name',
             'email',
@@ -113,39 +103,33 @@ class UserController extends Controller
             'm_user_roles_id'
         ]);
         $user = $this->user->update($payload, $id);
-
         if (!$user['status']) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update user'
             ], 500);
         }
-
         return response()->json([
             'success' => true,
             'data' => new UserResource($user['data']),
             'message' => 'User updated successfully'
         ]);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         $user = $this->user->delete($id);
-
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete user'
             ], 500);
         }
-
         return response()->json([
             'success' => true,
             'message' => 'User deleted successfully'
         ]);
     }
 }
-

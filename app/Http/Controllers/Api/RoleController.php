@@ -26,7 +26,6 @@ class RoleController extends Controller
             'access' => $request->access ?? '',
         ];
         $roles = $this->role->getAll($filter, 10, $request->sort ?? '');
-
         return response()->json([
             'success' => true,
             'data' => RoleResource::collection($roles['data']),
@@ -36,7 +35,6 @@ class RoleController extends Controller
             ]
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -48,47 +46,40 @@ class RoleController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-
         $payload = $request->only([
             'name',
             'access',
         ]);
         $role = $this->role->create($payload);
-
         if (!$role['status']) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to create role'
             ], 500);
         }
-
         return response()->json([
             'success' => true,
             'data' => new RoleResource($role['data']),
             'message' => 'Role created successfully'
         ]);
     }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $role = $this->role->getById($id);
-
         if (!$role['status']) {
             return response()->json([
                 'success' => false,
                 'message' => 'Role not found'
             ], 404);
         }
-
         return response()->json([
             'success' => true,
             'data' => new RoleResource($role['data'])
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -100,41 +91,35 @@ class RoleController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-
         $payload = $request->only([
             'name',
             'access',
         ]);
         $role = $this->role->update($payload, $id);
-
         if (!$role['status']) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update role'
             ], 500);
         }
-
         return response()->json([
             'success' => true,
             'data' => new RoleResource($role['data']),
             'message' => 'Role updated successfully'
         ]);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         $role = $this->role->delete($id);
-
         if (!$role) {
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete role'
             ], 500);
         }
-
         return response()->json([
             'success' => true,
             'message' => 'Role deleted successfully'

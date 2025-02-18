@@ -11,17 +11,18 @@ use App\Repository\CrudInterface;
 class RoleModel extends Model implements CrudInterface
 {
     use HasFactory;
-    use Uuid;
     use SoftDeletes;
-    protected $table = 'm_user_roles';
+    use Uuid;
+    public $timestamps = true;
     protected $fillable = [
         'name',
         'access',
     ];
-    public $timestamps = true;
     protected $attributes = [
         'access' => '{"create":false,"read":false,"update":false,"delete":false}',
     ];
+    protected $table = 'm_user_roles';
+
     public function users()
     {
         return $this->hasMany(UserModel::class, 'm_user_roles_id', 'id');
@@ -30,15 +31,12 @@ class RoleModel extends Model implements CrudInterface
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = '')
     {
         $role = $this->query();
-
         if (!empty($filter['name'])) {
             $role->where('name', 'LIKE', '%'.$filter['name'].'%');
         }
-
         $sort = $sort ?: 'id DESC';
         $role->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $role->paginate($itemPerPage)->appends('sort', $sort);
     }
 

@@ -17,7 +17,6 @@ class SalesCategoryHelper extends Venturo
     protected $total = 0;
     protected $salesHelper;
 
-
     public function __construct()
     {
         $this->salesHelper = new SalesModel();
@@ -29,7 +28,6 @@ class SalesCategoryHelper extends Venturo
         $end = (clone $this->endDate)->modify('+1 day');
         $interval = DateInterval::createFromDateString('1 day');
         $period = new DatePeriod($begin, $interval, $end);
-
         foreach ($period as $dt) {
             $date = $dt->format('Y-m-d');
             $dates[$date] = [
@@ -58,44 +56,37 @@ class SalesCategoryHelper extends Venturo
         $list = $list->toArray();
         $periods = $this->getPeriode();
         $salesDetail = [];
-
         foreach ($list as $sales) {
             foreach ($sales['details'] as $detail) {
                 if (empty($detail['product'])) {
                     continue;
                 }
-
                 $date = date('Y-m-d', strtotime($sales['date']));
                 $categoryId = $detail['product']['m_product_category_id'];
                 $categoryName = $detail['product']['category']['name'] ?? 'Unknown';
                 $productId = $detail['product']['id'];
                 $productName = $detail['product']['name'];
                 $totalSales = $detail['price'] * $detail['total_item'];
-
                 $listTransactions = $salesDetail[$categoryId]['products'][$productId]['transactions'] ?? $periods;
                 $subTotal = $salesDetail[$categoryId]['products'][$productId]['transactions'][$date]['total_sales'] ?? 0;
                 $totalPerProduct = $salesDetail[$categoryId]['products'][$productId]['transactions_total'] ?? 0;
                 $totalPerCategory = $salesDetail[$categoryId]['category_total'] ?? 0;
-
                 $salesDetail[$categoryId] = [
                     'category_id' => $categoryId,
                     'category_name' => $categoryName,
                     'category_total' => $totalPerCategory + $totalSales,
                     'products' => $salesDetail[$categoryId]['products'] ?? [],
                 ];
-
                 $salesDetail[$categoryId]['products'][$productId] = [
                     'product_id' => $productId,
                     'product_name' => $productName,
                     'transactions' => $listTransactions,
                     'transactions_total' => $totalPerProduct + $totalSales,
                 ];
-
                 $salesDetail[$categoryId]['products'][$productId]['transactions'][$date] = [
                     'date_transaction' => $date,
                     'total_sales' => $totalSales + $subTotal,
                 ];
-
                 $this->totalPerDate[$date] = ($this->totalPerDate[$date] ?? 0) + $totalSales;
                 $this->total += $totalSales;
             }
@@ -113,7 +104,6 @@ class SalesCategoryHelper extends Venturo
                 'category_total' => $sales['category_total'],
                 'products' => [],
             ];
-
             $indexProducts = 0;
             foreach ($sales['products'] as $product) {
                 $list[$indexSales]['products'][$indexProducts] = [
@@ -134,9 +124,7 @@ class SalesCategoryHelper extends Venturo
     {
         $this->startDate = new DateTime($startDate);
         $this->endDate = new DateTime($endDate);
-
         $sales = $this->salesHelper->getSalesByCategory($startDate, $endDate, $categoryId);
-
         return [
             'status' => true,
             'data' => $this->reformatReport($sales),

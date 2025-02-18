@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Hash;
 
 class ProductHelper extends Venturo
 {
+    const PRODUCT_PHOTO_DIRECTORY = 'foto-produk';
     private $productModel;
     private $productDetailModel;
-    const PRODUCT_PHOTO_DIRECTORY = 'foto-produk';
 
     public function __construct()
     {
@@ -29,14 +29,12 @@ class ProductHelper extends Venturo
         } else {
             unset($payload['photo']);
         }
-
         return $payload;
     }
 
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = ''): array
     {
         $product = $this->productModel->getAll($filter, $itemPerPage, $sort);
-
         return [
             'status' => true,
             'data' => $product,
@@ -54,7 +52,6 @@ class ProductHelper extends Venturo
                 'data' => null
             ];
         }
-
         return [
             'status' => true,
             'data' => $product
@@ -74,18 +71,14 @@ class ProductHelper extends Venturo
                 'is_available' => $payload['is_available'],
                 'photo' => $payload['photo'] ?? null,
             ]);
-
-            $this->insertProductDetail($payload['detail'], $product->id);
-
+            $this->insertProductDetail($payload['details'], $product->id);
             $this->commitTransaction();
-
             return [
                 'status' => true,
                 'data' => $product
             ];
         } catch (Throwable $e) {
             $this->rollbackTransaction();
-
             return [
                 'status' => false,
                 'message' => $e->getMessage()
@@ -107,11 +100,8 @@ class ProductHelper extends Venturo
                 'is_available' => $payload['is_available'],
                 'photo' => $payload['photo'] ?? null,
             ]);
-
-            $this->updateProductDetail($payload['detail'], $product->id);
-
+            $this->updateProductDetail($payload['details'], $product->id);
             $this->commitTransaction();
-
             return [
                 'status' => true,
                 'data' => $product
@@ -136,17 +126,14 @@ class ProductHelper extends Venturo
                 ];
             }
             $this->productDetailModel->where('m_product_id', $id)->delete();
-
             $product->delete();
             $this->commitTransaction();
-
             return [
                 'status' => true,
                 'data' => $id
             ];
         } catch (Throwable $e) {
             $this->rollbackTransaction();
-
             return [
                 'status' => false,
                 'message' => $e->getMessage()
@@ -170,7 +157,6 @@ class ProductHelper extends Venturo
     {
         $checkProductDetail = $this->productDetailModel->where('m_product_id', $productId)->get();
         $checkId = $checkProductDetail->pluck('id')->toArray();
-
         foreach ($details as $detail) {
             if (!empty($detail['id']) && in_array($detail['id'], $checkId)) {
                 $this->productDetailModel->where('id', $detail['id'])->update([

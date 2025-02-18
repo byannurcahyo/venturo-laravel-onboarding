@@ -11,6 +11,7 @@ use App\Exports\ReportSalesCategory;
 class ReportSalesController extends Controller
 {
     private $salesCategory;
+
     public function __construct()
     {
         $this->salesCategory = new SalesCategoryHelper();
@@ -21,7 +22,6 @@ class ReportSalesController extends Controller
         $endDate = $request->end_date ?? null;
         $categoryId = $request->category_id ?? null;
         $isExportExcel = $request->is_export_excel ?? null;
-
         $sales = $this->salesCategory->get($startDate, $endDate, $categoryId);
         if ($isExportExcel) {
             return Excel::download(new ReportSalesCategory($sales), 'report-sales-categories.xlsx');

@@ -8,6 +8,8 @@ use Illuminate\Contracts\Validation\Validator;
 
 class CustomerRequest extends FormRequest
 {
+    use ConvertsBase64ToFiles;
+    public $validator;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -15,15 +17,10 @@ class CustomerRequest extends FormRequest
     {
         return true;
     }
-
-    use ConvertsBase64ToFiles;
-
-    public $validator;
     public function failedValidation(Validator $validator)
     {
         $this->validator = $validator;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -36,7 +33,6 @@ class CustomerRequest extends FormRequest
         }
         return $this->updateRules();
     }
-
     private function createRules(): array
     {
         return [
@@ -48,19 +44,17 @@ class CustomerRequest extends FormRequest
             'phone' => 'nullable|numeric',
         ];
     }
-
     private function updateRules(): array
     {
         return [
             'name' => 'nullable|string|max:100',
-            'email' => 'nullable|email|unique:m_users',
+            'email' => 'nullable|email',
             'password' => 'nullable|string|min:6',
             'address' => 'nullable|string',
             'photo' => 'nullable|file|image',
             'phone' => 'nullable|numeric',
         ];
     }
-
     protected function base64FileKeys(): array
     {
         return [

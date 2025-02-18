@@ -9,6 +9,8 @@ use ProtoneMedia\LaravelMixins\Request\ConvertsBase64ToFiles;
 
 class ProductRequest extends FormRequest
 {
+    use ConvertsBase64ToFiles;
+    public $validator;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -16,15 +18,10 @@ class ProductRequest extends FormRequest
     {
         return true;
     }
-
-    use ConvertsBase64ToFiles;
-
-    public $validator;
     public function failedValidation(Validator $validator)
     {
         $this->validator = $validator;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -37,14 +34,12 @@ class ProductRequest extends FormRequest
         }
         return $this->updateRules();
     }
-
     protected function base64FileKeys(): array
     {
         return [
             'photo' => 'foto-product.jpg',
         ];
     }
-
     private function createRules(): array
     {
         return [
@@ -53,14 +48,13 @@ class ProductRequest extends FormRequest
             'photo' => 'nullable|file|image',
             'description' => 'required|string',
             'is_available' => 'required|numeric|max:1',
-            'm_product_category_id' => 'required|exists:m_product_categories,id',
-            'detail' => 'required|array|min:1',
-            'detail.*.type' => 'required',
-            'detail.*.description' => 'required',
-            'detail.*.price' => 'required|numeric',
+            'm_product_category_id' => 'required|exists:m_product_category,id',
+            'details' => 'nullable|array',
+            'details.*.type' => 'nullable|required',
+            'details.*.description' => 'nullable|required',
+            'details.*.price' => 'nullable|numeric',
         ];
     }
-
     private function updateRules(): array
     {
         return [
@@ -68,11 +62,11 @@ class ProductRequest extends FormRequest
             'price' => 'nullable|numeric',
             'photo' => 'nullable|file|image',
             'is_available' => 'nullable|numeric|max:1',
-            'm_product_category_id' => 'nullable|exists:m_product_categories,id',
-            'detail' => 'nullable|array|min:1',
-            'detail.*.type' => 'nullable',
-            'detail.*.description' => 'nullable',
-            'detail.*.price' => 'nullable|numeric',
+            'm_product_category_id' => 'nullable|exists:m_product_category,id',
+            'details' => 'nullable|array',
+            'details.*.type' => 'nullable',
+            'details.*.description' => 'nullable',
+            'details.*.price' => 'nullable|numeric',
         ];
     }
 }

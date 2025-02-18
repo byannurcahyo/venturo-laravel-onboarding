@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class CategoryRequest extends FormRequest
 {
+    public $validator;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -14,13 +15,10 @@ class CategoryRequest extends FormRequest
     {
         return true;
     }
-
-    public $validator;
     public function failedValidation(Validator $validator)
     {
         $this->validator = $validator;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -33,18 +31,16 @@ class CategoryRequest extends FormRequest
         }
         return $this->updateRules();
     }
-
     private function createRules(): array
     {
         return [
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100|unique:m_product_category',
         ];
     }
-
     private function updateRules(): array
     {
         return [
-            'name' => 'nullable|string|max:100',
+            'name' => 'nullable|string|max:100|unique:m_product_category',
         ];
     }
 }

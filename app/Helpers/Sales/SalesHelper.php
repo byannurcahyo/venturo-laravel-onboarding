@@ -12,6 +12,7 @@ class SalesHelper extends Venturo
 {
     private $salesModel;
     private $salesDetailModel;
+    
     public function __construct()
     {
         $this->salesModel = new SalesModel();
@@ -21,7 +22,6 @@ class SalesHelper extends Venturo
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = ''): array
     {
         $sales = $this->salesModel->getAll($filter, $itemPerPage, $sort);
-
         return [
             'status' => true,
             'data' => $sales,
@@ -33,7 +33,6 @@ class SalesHelper extends Venturo
     public function getSalesByCustomer(array $filter): array
     {
         $sales = $this->salesModel->with(['customer', 'details.product']);
-
         if (!empty($filter['customer_id'])) {
             $sales->where('m_customer_id', $filter['customer_id']);
         }
@@ -42,7 +41,6 @@ class SalesHelper extends Venturo
             $sales->whereBetween('date', [$filter['start_date'], $filter['end_date']]);
         }
         $sales = $sales->get();
-
         $groupedSales = $sales->groupBy('customer.name')->map(function ($customerSales) {
             return [
                 'customer_name' => $customerSales->first()->customer->name,
@@ -50,7 +48,6 @@ class SalesHelper extends Venturo
                 'transactions' => $customerSales,
             ];
         });
-
         return [
             'status' => true,
             'data' => $groupedSales->values(),
@@ -67,7 +64,6 @@ class SalesHelper extends Venturo
                 'data' => null
             ];
         }
-
         return [
             'status' => true,
             'data' => $sales
@@ -82,11 +78,8 @@ class SalesHelper extends Venturo
                 'm_customer_id' => $payload['m_customer_id'],
                 'date' => $payload['date'] ?? date('Y-m-d')
             ]);
-
             $this->insertSalesDetails($payload['product_detail'], $sales->id);
-
             $this->commitTransaction();
-
             return [
                 'status' => true,
                 'data' => $sales
@@ -109,11 +102,8 @@ class SalesHelper extends Venturo
                 'm_customer_id' => $payload['m_customer_id'],
                 'date' => $payload['date'] ?? date('Y-m-d')
             ]);
-
             $this->updateSalesDetails($payload['product_detail'], $sales->id);
-
             $this->commitTransaction();
-
             return [
                 'status' => true,
                 'data' => $sales
@@ -139,17 +129,14 @@ class SalesHelper extends Venturo
                 ];
             }
             $this->salesDetailModel->where('t_sales_id', $id)->delete();
-
             $sales->delete();
             $this->commitTransaction();
-
             return [
                 'status' => true,
                 'data' => $id
             ];
         } catch (Throwable $e) {
             $this->rollbackTransaction();
-
             return [
                 'status' => false,
                 'message' => $e->getMessage()
@@ -175,7 +162,6 @@ class SalesHelper extends Venturo
     {
         $checkSalesDetails = $this->salesDetailModel->where('t_sales_id', $salesId)->get();
         $checkId = $checkSalesDetails->pluck('id')->toArray();
-
         foreach ($productDetails as $productDetail) {
             if (!empty($productDetail['id']) && in_array($productDetail['id'], $checkId)) {
                 $this->salesDetailModel->where('id', $productDetail['id'])->update([

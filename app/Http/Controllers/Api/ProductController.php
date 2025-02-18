@@ -11,6 +11,7 @@ use App\Http\Resources\Product\ProductResource;
 class ProductController extends Controller
 {
     private $product;
+
     public function __construct()
     {
         $this->product = new ProductHelper();
@@ -26,7 +27,6 @@ class ProductController extends Controller
             'is_available' => request()->is_available ?? '',
         ];
         $products = $this->product->getAll($filter, 10, request()->sort ?? '');
-
         return response()->json([
             'success' => true,
             'data' => ProductResource::collection($products['data']),
@@ -36,7 +36,6 @@ class ProductController extends Controller
             ]
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -48,9 +47,8 @@ class ProductController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-        $payload = $request->only(['name', 'price', 'm_product_category_id', 'is_available', 'description', 'photo', 'detail']);
+        $payload = $request->only(['name', 'price', 'm_product_category_id', 'is_available', 'description', 'photo', 'details']);
         $product = $this->product->create($payload);
-
         if (!$product['status']) {
             return response()->json([
                 'success' => false,
@@ -63,14 +61,12 @@ class ProductController extends Controller
             'message' => 'Product created successfully'
         ]);
     }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $product = $this->product->getById($id);
-
         if (!$product['status']) {
             return response()->json([
                 'success' => false,
@@ -82,7 +78,6 @@ class ProductController extends Controller
             'data' => new ProductResource($product['data'])
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -94,9 +89,8 @@ class ProductController extends Controller
                 'message' => $request->validator->errors()
             ], 400);
         }
-        $payload = $request->only(['name', 'price', 'm_product_category_id', 'is_available', 'description', 'photo', 'detail']);
+        $payload = $request->only(['name', 'price', 'm_product_category_id', 'is_available', 'description', 'photo', 'details']);
         $product = $this->product->update($payload, $id);
-
         if (!$product['status']) {
             return response()->json([
                 'success' => false,
@@ -109,14 +103,12 @@ class ProductController extends Controller
             'message' => 'Product updated successfully'
         ]);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         $product = $this->product->delete($id);
-
         if (!$product) {
             return response()->json([
                 'success' => false,

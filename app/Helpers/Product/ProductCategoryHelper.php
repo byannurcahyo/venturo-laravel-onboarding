@@ -19,7 +19,6 @@ class ProductCategoryHelper extends Venturo
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = ''): array
     {
         $categories = $this->categoryModel->getAll($filter, $itemPerPage, $sort);
-
         return [
             'status' => true,
             'data' => $categories,
@@ -37,7 +36,6 @@ class ProductCategoryHelper extends Venturo
                 'data' => null
             ];
         }
-
         return [
             'status' => true,
             'data' => $category
@@ -48,7 +46,6 @@ class ProductCategoryHelper extends Venturo
     {
         try {
             $category = $this->categoryModel->store($payload);
-
             return [
                 'status' => true,
                 'data' => $category
@@ -66,7 +63,6 @@ class ProductCategoryHelper extends Venturo
         try {
             $this->categoryModel->edit($payload, $id);
             $category = $this->getById($id);
-
             return [
                 'status' => true,
                 'data' => $category['data']

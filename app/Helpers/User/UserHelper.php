@@ -11,6 +11,7 @@ class UserHelper extends Venturo
 {
     const USER_PHOTO_DIRECTORY = 'foto-user';
     private $userModel;
+
     public function __construct()
     {
         $this->userModel = new UserModel();
@@ -19,7 +20,6 @@ class UserHelper extends Venturo
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = ''): array
     {
         $users = $this->userModel->getAll($filter, $itemPerPage, $sort);
-
         return [
             'status' => true,
             'data' => $users,
@@ -37,7 +37,6 @@ class UserHelper extends Venturo
                 'data' => null
             ];
         }
-
         return [
             'status' => true,
             'data' => $user
@@ -53,7 +52,6 @@ class UserHelper extends Venturo
         } else {
             unset($payload['photo']);
         }
-
         return $payload;
     }
 
@@ -61,10 +59,8 @@ class UserHelper extends Venturo
     {
         try {
             $payload['password'] = Hash::make($payload['password']);
-
             $payload = $this->uploadGetPayload($payload);
             $user = $this->userModel->store($payload);
-
             return [
                 'status' => true,
                 'data' => $user
@@ -85,10 +81,8 @@ class UserHelper extends Venturo
             } else {
                 unset($payload['password']);
             }
-
             $payload = $this->uploadGetPayload($payload);
             $this->userModel->edit($payload, $id);
-
             $user = $this->getById($id);
             return [
                 'status' => true,

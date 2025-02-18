@@ -12,9 +12,9 @@ use Illuminate\Testing\Fluent\Concerns\Has;
 class UserModel extends Model implements CrudInterface
 {
     use HasFactory;
-    use Uuid;
     use SoftDeletes;
-    protected $table = 'm_users';
+    use Uuid;
+    public $timestamps = true;
     protected $fillable = [
         'name',
         'email',
@@ -22,27 +22,23 @@ class UserModel extends Model implements CrudInterface
         'photo',
         'phone_number',
     ];
-    public $timestamps = true;
     protected $attributes = [
         'm_user_roles_id' => 'dc492e77-742f-4c58-9479-f270887ffe5c',
     ];
+    protected $table = 'm_users';
 
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = '')
     {
         $user = $this->query();
-
         if (!empty($filter['name'])) {
             $user->where('name', 'LIKE', '%'.$filter['name'].'%');
         }
-
         if (!empty($filter['email'])) {
             $user->where('email', 'LIKE', '%'.$filter['email'].'%');
         }
-
         $sort = $sort ?: 'id DESC';
         $user->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $user->paginate($itemPerPage)->appends('sort', $sort);
     }
 

@@ -37,22 +37,18 @@ class ProductModel extends Model implements CrudInterface
     public function getAll(array $filter, int $itemPerPage = 0, string $sort = '')
     {
         $user = $this->query();
-        if (!empty($filter['type'])) {
-            $user->where('type', 'like', '%' . $filter['type'] . '%');
+        if (!empty($filter['name'])) {
+            $user->where('name', 'like', '%' . $filter['name'] . '%');
         }
-
         if (!empty($filter['m_product_category_id'])) {
             $user->where('m_product_category_id', '=', $filter['m_product_category_id']);
         }
-
         if (!empty($filter['is_available'])) {
             $user->where('is_available', '=', $filter['is_available']);
         }
-
         $sort = $sort ?: 'id DESC';
         $user->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $user->paginate($itemPerPage)->appends('sort', $sort);
     }
 

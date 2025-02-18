@@ -8,33 +8,23 @@ use Illuminate\Contracts\Validation\Validator;
 
 class UserRequest extends FormRequest
 {
+    use ConvertsBase64ToFiles;
+    public $validator;
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
     public function authorize(): bool
     {
         return true;
     }
-
-    use ConvertsBase64ToFiles;
-
-    public $validator;
-    /**
-    * Setting custom attribute pesan error yang ditampilkan
-    *
-    * @return array
-    */
-
     public function attributes()
     {
         return [
             'password' => 'Kolom Password',
         ];
     }
-
     /**
     * Tampilkan pesan error ketika validasi gagal
     *
@@ -44,7 +34,6 @@ class UserRequest extends FormRequest
     {
         $this->validator = $validator;
     }
-
     /**
     * Get the validation rules that apply to the request.
     *
@@ -57,7 +46,6 @@ class UserRequest extends FormRequest
         }
         return $this->updateRules();
     }
-
     private function createRules(): array {
         return [
             'name' => 'required|string|max:100',
@@ -68,7 +56,6 @@ class UserRequest extends FormRequest
             'm_user_roles_id' => 'required'
         ];
     }
-
     private function updateRules(): array {
         return [
             'name' => 'nullable|string|max:100',
@@ -79,7 +66,6 @@ class UserRequest extends FormRequest
             'm_user_roles_id' => 'nullable|exists:m_user_roles,id'
         ];
     }
-
     /**
     * inisialisasi key "photo" dengan value base64 sebagai "FILE"
     *

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 class SalesRequest extends FormRequest
 {
+    public $validator;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -14,13 +15,10 @@ class SalesRequest extends FormRequest
     {
         return true;
     }
-
-    public $validator;
     public function failedValidation(Validator $validator)
     {
         $this->validator = $validator;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -33,7 +31,6 @@ class SalesRequest extends FormRequest
         }
         return $this->updateRules();
     }
-
     private function createRules(): array
     {
         return [
@@ -41,12 +38,11 @@ class SalesRequest extends FormRequest
             'date' => 'nullable|date',
             'product_detail' => 'required|array|min:1',
             'product_detail.*.m_product_id' => 'required|uuid|exists:m_product,id',
-            'product_detail.*.m_product_detail_id' => 'required|uuid|exists:m_product_detail,id',
+            'product_detail.*.m_product_detail_id' => 'nullable|uuid|exists:m_product_detail,id',
             'product_detail.*.total_item' => 'required|integer|min:1',
             'product_detail.*.price' => 'required|numeric|min:0',
         ];
     }
-
     private function updateRules(): array
     {
         return [
@@ -54,7 +50,7 @@ class SalesRequest extends FormRequest
             'date' => 'nullable|date',
             'product_detail' => 'required|array|min:1',
             'product_detail.*.m_product_id' => 'required|uuid|exists:m_product,id',
-            'product_detail.*.m_product_detail_id' => 'required|uuid|exists:m_product_detail,id',
+            'product_detail.*.m_product_detail_id' => 'nullable|uuid|exists:m_product_detail,id',
             'product_detail.*.total_item' => 'required|integer|min:1',
             'product_detail.*.price' => 'required|numeric|min:0'
         ];

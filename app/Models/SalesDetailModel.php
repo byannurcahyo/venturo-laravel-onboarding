@@ -13,7 +13,7 @@ class SalesDetailModel extends Model implements CrudInterface
     use HasFactory;
     use SoftDeletes;
     use Uuid;
-    protected $table = 't_sales_details';
+    public $timestamps = true;
     protected $fillable = [
         't_sales_id',
         'm_product_id',
@@ -21,7 +21,7 @@ class SalesDetailModel extends Model implements CrudInterface
         'total_item',
         'price',
     ];
-    public $timestamps = true;
+    protected $table = 't_sales_details';
 
     public function sale()
     {
@@ -45,11 +45,9 @@ class SalesDetailModel extends Model implements CrudInterface
         if (!empty($filter['name'])) {
             $salesDetail->where('name', 'LIKE', '%'.$filter['name'].'%');
         }
-
         $sort = $sort ?: 'id DESC';
         $salesDetail->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false ;
-
         return $salesDetail->paginate($itemPerPage)->appends('sort', $sort);
     }
 

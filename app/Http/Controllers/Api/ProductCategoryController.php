@@ -11,6 +11,7 @@ use App\Http\Resources\Product\CategoryResource;
 class ProductCategoryController extends Controller
 {
     private $category;
+
     public function __construct()
     {
         $this->category = new ProductCategoryHelper();
@@ -24,7 +25,6 @@ class ProductCategoryController extends Controller
             'name' => $request->name ?? '',
         ];
         $categories = $this->category->getAll($filter, 10, $request->sort ?? '');
-
         return response()->json([
             'success' => true,
             'data' => CategoryResource::collection($categories['data']),
@@ -34,7 +34,6 @@ class ProductCategoryController extends Controller
             ]
         ]);
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -48,7 +47,6 @@ class ProductCategoryController extends Controller
         }
         $payload = $request->only(['name']);
         $category = $this->category->create($payload);
-
         if (!$category['status']) {
             return response()->json([
                 'success' => false,
@@ -61,14 +59,12 @@ class ProductCategoryController extends Controller
             'message' => 'Category created successfully'
         ]);
     }
-
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $category = $this->category->getById($id);
-
         if (!$category['status']) {
             return response()->json([
                 'success' => false,
@@ -80,7 +76,6 @@ class ProductCategoryController extends Controller
             'data' => new CategoryResource($category['data'])
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -94,7 +89,6 @@ class ProductCategoryController extends Controller
         }
         $payload = $request->only(['name']);
         $category = $this->category->update($payload, $id);
-
         if (!$category['status']) {
             return response()->json([
                 'success' => false,
@@ -107,14 +101,12 @@ class ProductCategoryController extends Controller
             'message' => 'Category updated successfully'
         ]);
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
         $category = $this->category->delete($id);
-
         if (!$category) {
             return response()->json([
                 'success' => false,
